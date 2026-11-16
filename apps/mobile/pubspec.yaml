@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:
@@ -26,3 +27,16 @@ flutter:
     - assets/image/bordir_bawah.png
     - assets/image/logo_hero1.png
     - assets/image/bordir_bawah1.png
+    - assets/image/maskot.png
+    - assets/image/bg_bubble.jpg
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'register_page_screens.dart';
+import 'forgot_password_screens.dart';
+import 'journal_page_screens.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,418 +16,343 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   @override
+  void dispose() {
+    _phoneController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _showSnackbar(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: const TextStyle(fontWeight: FontWeight.w500)),
+        backgroundColor: isError ? const Color(0xFFE53935) : const Color(0xFF2B70E4),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: const EdgeInsets.all(16),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: Container(
-        width: size.width,
-        height: size.height,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment(0.50, -0.00),
-            end: Alignment(0.50, 1.00),
-            colors: [Color(0xFF2F39A9), Color(0xFF2F39A9)],
+      backgroundColor: const Color(0xFFD9EAFD),
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: [
+          // ── BACKGROUND ─────────────────────────────────────────────
+          Positioned.fill(
+            child: Image.asset(
+              'assets/image/bg_bubble.jpg',
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: Stack(
-          children: [
-            // 1. Gambar latar belakang border_bawah1.png menutupi seluruh layar
-            Positioned.fill(
-              child: Image.asset(
-                'assets/image/bordir_bawah1.png',
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return const SizedBox.shrink();
-                },
-              ),
-            ),
 
-            // 2. Ilustrasi Wanita di Atas
-            Positioned(
-              top: MediaQuery.of(context).padding.top + 60,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: SizedBox(
-                  width: size.width * 0.75,
-                  height: size.height * 0.25,
-                  child: Image.asset(
-                    'assets/image/logo_hero1.png',
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            ),
+          // ── KONTEN FIXED ───────────────────────────────────────────
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  const SizedBox(height: 8),
 
-            // 3. Tombol Kembali (Panah Kiri) di Atas
-            Positioned(
-              left: 20,
-              top: MediaQuery.of(context).padding.top + 50,
-              child: GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 6,
-                        offset: Offset(0, 2),
+                  // ── TOMBOL BACK ────────────────────────────────
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: GestureDetector(
+                      onTap: () => Navigator.maybePop(context),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.80),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.07),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(Icons.arrow_back, color: Color(0xFF6B8AB8), size: 20),
                       ),
-                    ],
+                    ),
                   ),
-                  child: const Icon(
-                    Icons.arrow_back,
-                    color: Color(0xFF2F39A9),
-                    size: 20,
-                  ),
-                ),
-              ),
-            ),
 
-            // 4. Kartu Putih Pop-Up di Tengah (Tidak memanjang sampai bawah)
-            Center(
-              child: SingleChildScrollView(
-                child: Container(
-                  width: size.width * 0.88,
-                  margin: const EdgeInsets.only(top: 40),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-                  decoration: ShapeDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment(0.50, -0.00),
-                      end: Alignment(0.50, 1.00),
-                      colors: [Colors.white, Color(0xFFEFF5FD)],
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32), // Membulat penuh di semua sisi
-                    ),
-                    shadows: const [
-                      BoxShadow(
-                        color: Color(0x260A46D3),
-                        blurRadius: 30,
-                        offset: Offset(0, 10),
-                        spreadRadius: 0,
-                      )
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  const SizedBox(height: 6),
+
+                  // ── LOGO CURHATIN ──────────────────────────────
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        'Masuk Ke Akun',
+                        'Curhatin',
                         style: TextStyle(
-                          color: Color(0xFF061854),
-                          fontSize: 24,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF1B6FD8),
+                          fontSize: 32,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -1.0,
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        'Lanjutkan perjalanan ceritamu\nbersama Curhatin.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Color(0xFF808EAA),
-                          fontSize: 13,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                          height: 1.4,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Input Nomor Telepon (+62)
+                      const SizedBox(width: 4),
                       Container(
-                        height: 48,
-                        decoration: ShapeDecoration(
-                          color: const Color(0xFFF2F4FA),
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(
-                              width: 1,
-                              color: Color(0xFFE6EBF3),
-                            ),
-                            borderRadius: BorderRadius.circular(14),
-                          ),
+                        width: 26,
+                        height: 26,
+                        decoration: const BoxDecoration(color: Color(0xFF1B6FD8), shape: BoxShape.circle),
+                        child: const Icon(Icons.favorite_rounded, color: Colors.white, size: 15),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  // ── ILUSTRASI ──────────────────────────────────
+                  SizedBox(
+                    width: size.width * 0.65,
+                    height: size.height * 0.20,
+                    child: Image.asset(
+                      'assets/image/logo_hero1.png',
+                      fit: BoxFit.contain,
+                      alignment: Alignment.bottomCenter,
+                      errorBuilder: (c, e, s) => const SizedBox.shrink(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  // ── KARTU PUTIH FORM (WRAP CONTENT) ────────────
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.fromLTRB(20, 18, 20, 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(32),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF4A90D9).withOpacity(0.12),
+                          blurRadius: 24,
+                          offset: const Offset(0, 8),
                         ),
-                        child: Row(
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Row(
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                          const Text(
+                            'Masuk Ke Akun',
+                            style: TextStyle(color: Color(0xFF061854), fontSize: 22, fontWeight: FontWeight.w700),
+                          ),
+                          const SizedBox(height: 3),
+                          const Text(
+                            'Lanjutkan perjalanan ceritamu\nbersama Curhatin.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Color(0xFF808EAA), fontSize: 12, height: 1.4),
+                          ),
+                          const SizedBox(height: 14),
+
+                          // Input Nomor Telepon
+                          _phoneBox(),
+                          const SizedBox(height: 10),
+
+                          // Input Password
+                          _inputBox(
+                            prefixIcon: Icons.lock_outline_rounded,
+                            suffixIcon: GestureDetector(
+                              onTap: () => setState(() => _obscurePassword = !_obscurePassword),
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 12),
+                                child: Icon(
+                                  _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                                  color: const Color(0xFF6A7995), size: 20,
+                                ),
+                              ),
+                            ),
+                            child: TextField(
+                              controller: _passwordController,
+                              obscureText: _obscurePassword,
+                              style: _inputTextStyle,
+                              decoration: _inputDeco('Password'),
+                            ),
+                          ),
+
+                          // Lupa Password
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (_) => const ForgotPasswordPage()));
+                              },
+                              style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(0, 28)),
+                              child: const Text(
+                                'Lupa password?',
+                                style: TextStyle(color: Color(0xFF2365F9), fontSize: 12, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 2),
+
+                          // Tombol Masuk
+                          SizedBox(
+                            width: double.infinity,
+                            height: 48,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => const JournalPage()),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF2B6FDE),
+                                foregroundColor: Colors.white,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                              ),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text('🇮🇩', style: TextStyle(fontSize: 15)),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    '+62',
-                                    style: TextStyle(
-                                      color: Color(0xFF6B7893),
-                                      fontSize: 13,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  SizedBox(width: 2),
-                                  Icon(Icons.keyboard_arrow_down, color: Color(0xCC808EAA), size: 16),
+                                  Text('Masuk', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700)),
+                                  SizedBox(width: 8),
+                                  Icon(Icons.arrow_forward_rounded, size: 18, color: Colors.white),
                                 ],
                               ),
                             ),
-                            Container(
-                              height: 22,
-                              width: 1,
-                              color: const Color(0xCC808EAA),
-                            ),
-                            Expanded(
-                              child: TextField(
-                                controller: _phoneController,
-                                keyboardType: TextInputType.phone,
-                                style: const TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 13,
-                                  color: Color(0xFF061854),
-                                ),
-                                decoration: const InputDecoration(
-                                  hintText: 'Nomor telefon',
-                                  hintStyle: TextStyle(
-                                    color: Color(0xCC808EAA),
-                                    fontSize: 13,
-                                    fontFamily: 'Poppins',
-                                  ),
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                                ),
+                          ),
+                          const SizedBox(height: 12),
+
+                          // Divider
+                          const Row(
+                            children: [
+                              Expanded(child: Divider(color: Color(0xFFD6DFEC), thickness: 1)),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('atau lanjut dengan', style: TextStyle(color: Color(0xFF8896AB), fontSize: 11, fontWeight: FontWeight.w500)),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 12),
+                              Expanded(child: Divider(color: Color(0xFFD6DFEC), thickness: 1)),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
 
-                      // Input Password
-                      Container(
-                        height: 48,
-                        decoration: ShapeDecoration(
-                          color: const Color(0xFFF2F4FA),
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(
-                              width: 1,
-                              color: Color(0xFFE6EBF3),
+                          // Tombol Google
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: const Color(0xFFE2E8F0), width: 1.2),
                             ),
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                        ),
-                        child: TextField(
-                          controller: _passwordController,
-                          obscureText: _obscurePassword,
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 13,
-                            color: Color(0xFF061854),
-                          ),
-                          decoration: InputDecoration(
-                            hintText: 'Password',
-                            hintStyle: const TextStyle(
-                              color: Color(0xCC808EAA),
-                              fontSize: 13,
-                              fontFamily: 'Poppins',
+                            child: const Text.rich(
+                              TextSpan(children: [
+                                TextSpan(text: 'G', style: TextStyle(color: Color(0xFF4285F4), fontSize: 20, fontWeight: FontWeight.w700)),
+                                TextSpan(text: 'o', style: TextStyle(color: Color(0xFFEA4335), fontSize: 20, fontWeight: FontWeight.w700)),
+                                TextSpan(text: 'o', style: TextStyle(color: Color(0xFFFBBC05), fontSize: 20, fontWeight: FontWeight.w700)),
+                                TextSpan(text: 'g', style: TextStyle(color: Color(0xFF4285F4), fontSize: 20, fontWeight: FontWeight.w700)),
+                                TextSpan(text: 'l', style: TextStyle(color: Color(0xFF34A853), fontSize: 20, fontWeight: FontWeight.w700)),
+                                TextSpan(text: 'e', style: TextStyle(color: Color(0xFFEA4335), fontSize: 20, fontWeight: FontWeight.w700)),
+                              ]),
                             ),
-                            prefixIcon: const Icon(Icons.lock_outline, color: Color(0xCC808EAA), size: 18),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                                color: const Color(0xCC808EAA),
-                                size: 18,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _obscurePassword = !_obscurePassword;
-                                });
-                              },
-                            ),
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.symmetric(vertical: 12),
                           ),
-                        ),
-                      ),
+                          const SizedBox(height: 10),
 
-                      // Lupa Password
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {},
-                          style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(0, 26)),
-                          child: const Text(
-                            'Lupa password?',
-                            style: TextStyle(
-                              color: Color(0xFF2365F9),
-                              fontSize: 12,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-
-                      // Tombol Masuk
-                      Container(
-                        width: double.infinity,
-                        height: 48,
-                        decoration: ShapeDecoration(
-                          gradient: const LinearGradient(
-                            begin: Alignment(0.00, 0.50),
-                            end: Alignment(1.00, 0.50),
-                            colors: [Color(0xFF499AFD), Color(0xFF216DCA)],
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(9999),
-                          ),
-                          shadows: const [
-                            BoxShadow(
-                              color: Color(0x3F4648D4),
-                              blurRadius: 14,
-                              offset: Offset(0, 4),
-                              spreadRadius: -4,
-                            )
-                          ],
-                        ),
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(9999),
-                            ),
-                          ),
-                          child: const Row(
+                          // Daftar sekarang
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                'Masuk',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.35,
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                '→',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                              const Text('Belum punya akun? ', style: TextStyle(color: Color(0xFF808EAA), fontSize: 12)),
+                              GestureDetector(
+                                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const RegisterPage())),
+                                child: const Text('Daftar sekarang', style: TextStyle(color: Color(0xFF2365F9), fontSize: 12, fontWeight: FontWeight.w700)),
                               ),
                             ],
                           ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-
-                      // Pemisah "atau lanjut dengan"
-                      Row(
-                        children: [
-                          const Expanded(child: Divider(color: Color(0x7FA0ABC0))),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: const Text(
-                              'atau lanjut dengan',
-                              style: TextStyle(
-                                color: Color(0xCC808EAA),
-                                fontSize: 11,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          const Expanded(child: Divider(color: Color(0x7FA0ABC0))),
                         ],
                       ),
-                      const SizedBox(height: 12),
-
-                      // Tombol Google
-                      Container(
-                        width: 115,
-                        height: 38,
-                        decoration: ShapeDecoration(
-                          gradient: const LinearGradient(
-                            begin: Alignment(0.50, -0.00),
-                            end: Alignment(0.50, 1.00),
-                            colors: [Colors.white, Color(0xFFF7F7F7)],
-                          ),
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(
-                              width: 1,
-                              color: Color(0xFFE6EBF3),
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(20),
-                          onTap: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.g_mobiledata, color: Colors.red, size: 28),
-                              const SizedBox(width: 2),
-                              const Text(
-                                'Google',
-                                style: TextStyle(
-                                  color: Color(0xFF061854),
-                                  fontSize: 12,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-
-                      // Daftar Sekarang
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'Belum punya akun? ',
-                            style: TextStyle(
-                              color: Color(0xCC808EAA),
-                              fontSize: 12,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: const Text(
-                              'Daftar sekarang',
-                              style: TextStyle(
-                                color: Color(0xFF2365F9),
-                                fontSize: 12,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                    ),
+                  const Spacer(),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+
+  // ── HELPERS ──────────────────────────────────────────────────────
+
+  Widget _inputBox({required Widget child, IconData? prefixIcon, Widget? suffixIcon}) {
+    return Container(
+      height: 50,
+      decoration: BoxDecoration(
+        color: const Color(0xFFF3F5FA),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE5EAF2), width: 1.1),
+      ),
+      child: Row(
+        children: [
+          if (prefixIcon != null) ...[
+            const SizedBox(width: 12),
+            Icon(prefixIcon, color: const Color(0xFF6A7995), size: 20),
+            const SizedBox(width: 8),
+          ],
+          Expanded(child: child),
+          if (suffixIcon != null) suffixIcon,
+        ],
+      ),
+    );
+  }
+
+  Widget _phoneBox() {
+    return Container(
+      height: 50,
+      decoration: BoxDecoration(
+        color: const Color(0xFFF3F5FA),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE5EAF2), width: 1.1),
+      ),
+      child: Row(
+        children: [
+          const SizedBox(width: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(2),
+            child: SizedBox(
+              width: 20, height: 13,
+              child: Column(children: [
+                Expanded(child: Container(color: const Color(0xFFE53935))),
+                Expanded(child: Container(color: Colors.white)),
+              ]),
+            ),
+          ),
+          const SizedBox(width: 6),
+          const Text('+62', style: TextStyle(color: Color(0xFF505F79), fontSize: 14, fontWeight: FontWeight.w600)),
+          const Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF505F79), size: 18),
+          const SizedBox(width: 6),
+          Container(height: 20, width: 1, color: const Color(0xFFCBD5E1)),
+          const SizedBox(width: 10),
+          Expanded(
+            child: TextField(
+              controller: _phoneController,
+              keyboardType: TextInputType.phone,
+              style: _inputTextStyle,
+              decoration: _inputDeco('Nomor telepon'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  InputDecoration _inputDeco(String hint) => InputDecoration(
+    isDense: true, hintText: hint,
+    hintStyle: const TextStyle(color: Color(0xFF909EB5), fontSize: 14),
+    border: InputBorder.none,
+    contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 15),
+  );
+
+  static const TextStyle _inputTextStyle = TextStyle(color: Color(0xFF2C3E50), fontSize: 14);
 }
