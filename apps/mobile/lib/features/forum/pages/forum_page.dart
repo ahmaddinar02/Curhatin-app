@@ -152,16 +152,13 @@ class _ForumPageState extends State<ForumPage> {
     );
   }
 
-  /// Logo di AppBar: gunakan Image.asset jika file tersedia,
-  /// fallback ke widget teks bergaya logo.
+  /// Logo di AppBar menggunakan file gambar dari assets.
   Widget _buildLogoTitle() {
-    // Ganti baris ini dengan Image.asset('assets/images/logo_curhatin.png', height: 32)
-    // setelah file logo diletakkan di assets/images/
     return Image.asset(
-      'assets/image/curhtinlogo2.png',
-        height: 32,
-        fit: BoxFit.contain,
-      );
+      'assets/images/curhatinlogo2.png',
+      height: 32,
+      fit: BoxFit.contain,
+    );
   }
 
   Widget _buildFAB() {
