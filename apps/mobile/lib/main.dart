@@ -15,7 +15,7 @@ class CurhatinApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF2D7DD2),
+          seedColor: const Color(0xFF2B7AFC),
           brightness: Brightness.light,
         ),
         useMaterial3: true,

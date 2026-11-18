@@ -116,24 +116,44 @@ class _CreateDiscussionPageState extends State<CreateDiscussionPage> {
       elevation: 0,
       surfaceTintColor: Colors.transparent,
       systemOverlayStyle: SystemUiOverlayStyle.dark,
-      leading: GestureDetector(
-        onTap: () => Navigator.of(context).pop(),
-        child: Container(
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceGrey,
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(
-            Icons.arrow_back_rounded,
-            color: AppColors.textPrimary,
-            size: 20,
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 12),
+        child: GestureDetector(
+          onTap: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
+          },
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: AppColors.primary,
+              size: 18,
+            ),
           ),
         ),
       ),
+      
       title: const Text(
         'Diskusi Baru',
-        style: AppTextStyles.heading2,
+        style: TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 20,
+          color: Color(0xFF2b7afc),
+        )
       ),
       centerTitle: true,
       bottom: PreferredSize(

@@ -9,7 +9,10 @@ void main() {
     await tester.pumpWidget(const CurhatinApp());
 
     // Verify ForumPage loads with the app title
-    expect(find.text('Curhatin'), findsNothing); // title is in AppBar as RichText
+    expect(
+      find.text('Curhatin'),
+      findsNothing,
+    ); // title is in AppBar as RichText
     expect(find.byType(MaterialApp), findsOneWidget);
   });
 }

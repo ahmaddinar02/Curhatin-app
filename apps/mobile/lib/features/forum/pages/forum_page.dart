@@ -109,82 +109,69 @@ class _ForumPageState extends State<ForumPage> {
       elevation: 0,
       surfaceTintColor: Colors.transparent,
       systemOverlayStyle: SystemUiOverlayStyle.dark,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 30,
-            height: 30,
+      // Back button: lingkaran putih dengan arrow biru
+      leading: Padding(
+        padding: const EdgeInsets.only(left: 12),
+        child: GestureDetector(
+          onTap: () {
+            if (Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
+          },
+          child: Container(
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
-              color: AppColors.primary,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Icon(
-              Icons.chat_rounded,
               color: Colors.white,
-              size: 18,
-            ),
-          ),
-          const SizedBox(width: 8),
-          RichText(
-            text: const TextSpan(
-              children: [
-                TextSpan(
-                  text: 'Curhat',
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 20,
-                    letterSpacing: -0.3,
-                  ),
-                ),
-                TextSpan(
-                  text: 'in',
-                  style: TextStyle(
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 20,
-                    letterSpacing: -0.3,
-                  ),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
+            child: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: AppColors.primary,
+              size: 18,
+            ),
           ),
-        ],
+        ),
       ),
+      // Logo gambar di tengah
+      title: _buildLogoTitle(),
       centerTitle: true,
+      // Tidak ada actions (search dihapus)
+      actions: const [SizedBox(width: 52)], // balancing spacer agar logo benar-benar di tengah
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
         child: Divider(height: 1, color: AppColors.divider),
       ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 12),
-          child: IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search_rounded,
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ),
-      ],
     );
   }
 
+  /// Logo di AppBar: gunakan Image.asset jika file tersedia,
+  /// fallback ke widget teks bergaya logo.
+  Widget _buildLogoTitle() {
+    // Ganti baris ini dengan Image.asset('assets/images/logo_curhatin.png', height: 32)
+    // setelah file logo diletakkan di assets/images/
+    return Image.asset(
+      'assets/image/curhtinlogo2.png',
+        height: 32,
+        fit: BoxFit.contain,
+      );
+  }
+
   Widget _buildFAB() {
-    return FloatingActionButton.extended(
+    return FloatingActionButton(
       onPressed: _openCreateDiscussion,
       backgroundColor: AppColors.primary,
       foregroundColor: Colors.white,
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      icon: const Icon(Icons.add_rounded, size: 22),
-      label: const Text(
-        'Diskusi Baru',
-        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
-      ),
+      elevation: 6,
+      shape: const CircleBorder(),
+      child: const Icon(Icons.add_rounded, size: 28),
     );
   }
 
