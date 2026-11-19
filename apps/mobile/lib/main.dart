@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'screens/landing_page_screens.dart'; // Memanggil halaman dari folder screens
+import 'screens/landing_page_screens.dart';
+import 'features/forum/pages/forum_page.dart'; // Forum dari branch dinar
 
 void main() {
   runApp(const CurhatinApp());
