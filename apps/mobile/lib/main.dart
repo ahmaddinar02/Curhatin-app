@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'features/relaxation/pages/relaxation_page.dart';
 import 'features/forum/pages/forum_page.dart';
 
 void main() {
@@ -21,7 +22,7 @@ class CurhatinApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Roboto',
       ),
-      home: const ForumPage(),
+      home: const RelaxationPage(),
     );
   }
 }
