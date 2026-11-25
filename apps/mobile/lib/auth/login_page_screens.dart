@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'register_page_screens.dart';
 import 'forgot_password_screens.dart';
-import 'journal_page_screens.dart';
+import '../features/journal/journal_page_screens.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
