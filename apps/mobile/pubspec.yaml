@@ -1,23 +1,24 @@
-name: mobile
-description: "Aplikasi mobile Curhatin."
+name: curhatin
+description: "Aplikasi kesehatan mental dan ruang aman untuk bercerita."
 publish_to: 'none'
 
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.13.3
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-
-  cupertino_icons: ^1.0.8
-  google_fonts: ^6.2.1
+  cupertino_icons: ^1.0.6
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^3.0.0
 
+<<<<<<< HEAD
   flutter_lints: ^6.0.0
 
 flutter:
@@ -25,3 +26,33 @@ flutter:
 
   assets:
     - assets/images/
+=======
+# Blok flutter harus berada di paling luar (sejajar dengan dependencies/dev_dependencies)
+flutter:
+  uses-material-design: true
+
+<<<<<<< HEAD
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/
+=======
+  assets:
+    - assets/image/logo_hero.png
+    - assets/image/bordir_bawah.png
+    - assets/image/logo_hero1.png
+    - assets/image/bordir_bawah1.png
+    - assets/image/maskot.png
+    - assets/image/bg_bubble.jpg
+>>>>>>> e9db5a0f1661678d6a64bced7fc0804604e4566e
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+>>>>>>> dinar
