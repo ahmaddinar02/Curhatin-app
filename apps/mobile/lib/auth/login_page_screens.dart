@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'register_page_screens.dart';
 import 'forgot_password_screens.dart';
-import '../features/journal/journal_page_screens.dart';
+import '../screens/dashboard_page_screens.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -202,9 +202,12 @@ class _LoginPageState extends State<LoginPage> {
                             height: 48,
                             child: ElevatedButton(
                               onPressed: () {
-                                Navigator.push(
+                                // Setelah login, arahkan ke Dashboard dan hapus riwayat
+                                // halaman auth agar tombol back tidak kembali ke login.
+                                Navigator.pushAndRemoveUntil(
                                   context,
-                                  MaterialPageRoute(builder: (_) => const JournalPage()),
+                                  MaterialPageRoute(builder: (_) => const DashboardPage()),
+                                  (route) => false,
                                 );
                               },
                               style: ElevatedButton.styleFrom(

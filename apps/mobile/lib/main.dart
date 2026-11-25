@@ -1,59 +1,28 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'features/assessment/assessment_intro_page.dart';
 
-void main() => runApp(const MyApp());
-=======
-<<<<<<< HEAD
-import 'features/relaxation/pages/relaxation_page.dart';
-import 'features/forum/pages/forum_page.dart';
-=======
-import 'auth/landing_page_screens.dart'; // Memanggil halaman dari folder auth
->>>>>>> e9db5a0f1661678d6a64bced7fc0804604e4566e
+import 'auth/landing_page_screens.dart';
 
 void main() {
   runApp(const CurhatinApp());
 }
->>>>>>> dinar
 
 class CurhatinApp extends StatelessWidget {
   const CurhatinApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: AssessmentIntroPage(),
-=======
     return MaterialApp(
       title: 'Curhatin',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-<<<<<<< HEAD
+        useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF2B7AFC),
           brightness: Brightness.light,
-=======
-        useMaterial3: false,
-        primarySwatch: Colors.blue,
+        ),
         fontFamily: 'Poppins',
-        textTheme: ThemeData.light().textTheme.apply(
-          fontFamily: 'Poppins',
-        ),
-        primaryTextTheme: ThemeData.light().primaryTextTheme.apply(
-          fontFamily: 'Poppins',
->>>>>>> e9db5a0f1661678d6a64bced7fc0804604e4566e
-        ),
-        useMaterial3: true,
-        fontFamily: 'Roboto',
       ),
-<<<<<<< HEAD
-      home: const RelaxationPage(),
-=======
       home: const LandingPage(),
->>>>>>> e9db5a0f1661678d6a64bced7fc0804604e4566e
->>>>>>> dinar
     );
   }
 }
