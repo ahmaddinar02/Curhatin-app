@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../features/assessment/assessment_intro_page.dart';
+import '../features/chatbot/pages/chatbot_page.dart';
 import '../features/forum/pages/create_discussion_page.dart';
 import '../features/forum/pages/forum_page.dart';
 import '../features/journal/journal_page_screens.dart';
@@ -158,7 +159,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             title: 'Ngobrol dengan Athena...',
                             subtitle: 'Curhatin apa yang ada di pikiranmu.',
                             actionLabel: 'Mulai Chat',
-                            onTap: () => _showSoon('Fitur chat Athena'),
+                            onTap: () => _open(const ChatbotPage()),
                           ),
                         ),
                       ],
