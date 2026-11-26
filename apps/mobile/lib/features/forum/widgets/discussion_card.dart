@@ -36,7 +36,7 @@ class DiscussionCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header: Avatar + Name + Time + Category
+            // Header: Avatar + Name + Time
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -46,17 +46,10 @@ class DiscussionCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              discussion.userName,
-                              style: AppTextStyles.heading3,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          CategoryBadge(category: discussion.category),
-                        ],
+                      Text(
+                        discussion.userName,
+                        style: AppTextStyles.heading3,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 2),
                       TimeAgoText(dateTime: discussion.createdAt),
@@ -121,12 +114,6 @@ class DiscussionCard extends StatelessWidget {
                   label: '${discussion.commentCount}',
                   labelColor: AppColors.textSecondary,
                   onTap: onComment,
-                ),
-                const Spacer(),
-                Icon(
-                  Icons.bookmark_border_rounded,
-                  size: 20,
-                  color: AppColors.textTertiary,
                 ),
               ],
             ),
