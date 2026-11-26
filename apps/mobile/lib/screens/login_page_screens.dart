@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'register_page_screens.dart';
 import 'forgot_password_screens.dart';
 import 'journal_page_screens.dart';
+import 'main_navigation_screen.dart';
+import '../services/api_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,6 +14,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _obscurePassword = true;
+  bool _isLoading = false;
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -20,6 +23,37 @@ class _LoginPageState extends State<LoginPage> {
     _phoneController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _handleLogin() async {
+    final identifier = _phoneController.text.trim();
+    final password = _passwordController.text;
+
+    if (identifier.isEmpty) {
+      _showSnackbar('Nama lengkap atau nomor telepon harus diisi', isError: true);
+      return;
+    }
+    if (password.isEmpty) {
+      _showSnackbar('Password harus diisi', isError: true);
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    final res = await ApiService.login(phone: identifier, password: password);
+
+    if (!mounted) return;
+    setState(() => _isLoading = false);
+
+    if (res['success'] == true) {
+      _showSnackbar(res['message'] ?? 'Login berhasil!');
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const MainNavigationPage()),
+      );
+    } else {
+      _showSnackbar(res['message'] ?? 'Login gagal.', isError: true);
+    }
   }
 
   void _showSnackbar(String message, {bool isError = false}) {
@@ -154,8 +188,15 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 14),
 
-                          // Input Nomor Telepon
-                          _phoneBox(),
+                          // Input Nama Lengkap atau Nomor Telepon
+                          _inputBox(
+                            prefixIcon: Icons.person_outline_rounded,
+                            child: TextField(
+                              controller: _phoneController,
+                              style: _inputTextStyle,
+                              decoration: _inputDeco('Nama Lengkap atau Nomor Telepon'),
+                            ),
+                          ),
                           const SizedBox(height: 10),
 
                           // Input Password
@@ -201,26 +242,27 @@ class _LoginPageState extends State<LoginPage> {
                             width: double.infinity,
                             height: 48,
                             child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const JournalPage()),
-                                );
-                              },
+                              onPressed: _isLoading ? null : _handleLogin,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF2B6FDE),
                                 foregroundColor: Colors.white,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                               ),
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text('Masuk', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700)),
-                                  SizedBox(width: 8),
-                                  Icon(Icons.arrow_forward_rounded, size: 18, color: Colors.white),
-                                ],
-                              ),
+                              child: _isLoading
+                                  ? const SizedBox(
+                                      width: 22,
+                                      height: 22,
+                                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.2),
+                                    )
+                                  : const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text('Masuk', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w700)),
+                                        SizedBox(width: 8),
+                                        Icon(Icons.arrow_forward_rounded, size: 18, color: Colors.white),
+                                      ],
+                                    ),
                             ),
                           ),
                           const SizedBox(height: 12),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'main_navigation_screen.dart';
+import '../services/api_service.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -10,6 +12,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  bool _isLoading = false;
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -25,18 +28,50 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
-  void _handleRegister() {
+  void _handleRegister() async {
     final name = _nameController.text.trim();
     final phone = _phoneController.text.trim();
     final password = _passwordController.text;
-    final confirmPassword = _confirmPasswordController.text;
 
     if (name.isEmpty) { _showSnackbar('Nama lengkap harus diisi', isError: true); return; }
     if (phone.isEmpty) { _showSnackbar('Nomor telepon harus diisi', isError: true); return; }
     if (password.isEmpty) { _showSnackbar('Password harus diisi', isError: true); return; }
     if (password.length < 6) { _showSnackbar('Password minimal 6 karakter', isError: true); return; }
-    if (password != confirmPassword) { _showSnackbar('Konfirmasi password tidak cocok!', isError: true); return; }
-    _showSnackbar('Pendaftaran berhasil! Selamat datang, $name');
+
+    String confirmPassword = _confirmPasswordController.text;
+    if (confirmPassword.isEmpty) {
+      confirmPassword = password;
+    } else if (password != confirmPassword) {
+      _showSnackbar('Konfirmasi password tidak cocok!', isError: true);
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    final res = await ApiService.register(
+      name: name,
+      phone: phone,
+      password: password,
+      confirmPassword: confirmPassword,
+    );
+
+    if (!mounted) return;
+    setState(() => _isLoading = false);
+
+    if (res['success'] == true) {
+      _showSnackbar(res['message'] ?? 'Pendaftaran berhasil!');
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const MainNavigationPage()),
+            (route) => false,
+          );
+        }
+      });
+    } else {
+      _showSnackbar(res['message'] ?? 'Pendaftaran gagal.', isError: true);
+    }
   }
 
   void _showSnackbar(String message, {bool isError = false}) {
@@ -182,19 +217,25 @@ class _RegisterPageState extends State<RegisterPage> {
                           SizedBox(
                             width: double.infinity, height: 48,
                             child: ElevatedButton(
-                              onPressed: _handleRegister,
+                              onPressed: _isLoading ? null : _handleRegister,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFF2B6FDE), foregroundColor: Colors.white, elevation: 0,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                               ),
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text('Daftar Sekarang', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white)),
-                                  SizedBox(width: 8),
-                                  Icon(Icons.arrow_forward_rounded, size: 18, color: Colors.white),
-                                ],
-                              ),
+                              child: _isLoading
+                                  ? const SizedBox(
+                                      width: 22,
+                                      height: 22,
+                                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.2),
+                                    )
+                                  : const Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text('Daftar Sekarang', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white)),
+                                        SizedBox(width: 8),
+                                        Icon(Icons.arrow_forward_rounded, size: 18, color: Colors.white),
+                                      ],
+                                    ),
                             ),
                           ),
                           const SizedBox(height: 12),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'journal_write_screens.dart';
+import 'login_page_screens.dart';
+import '../services/api_service.dart';
 
 // ── MODEL DATA JURNAL ────────────────────────────────────────────
 class JournalEntry {
@@ -74,6 +76,33 @@ class _JournalPageState extends State<JournalPage> {
     ),
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchJournalsFromBackend();
+  }
+
+  Future<void> _fetchJournalsFromBackend() async {
+    final res = await ApiService.getJournals();
+    if (res['success'] == true && res['data'] is List) {
+      final List list = res['data'];
+      if (list.isNotEmpty && mounted) {
+        setState(() {
+          _journals.clear();
+          for (var item in list) {
+            _journals.add(JournalEntry(
+              id: item['id'].toString(),
+              title: item['title'] ?? '',
+              content: item['content'] ?? '',
+              createdAt: DateTime.tryParse(item['created_at'] ?? '') ?? DateTime.now(),
+              isDeleted: false,
+            ));
+          }
+        });
+      }
+    }
+  }
+
   void _showSnackbar(String message, {bool isError = false}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -97,6 +126,7 @@ class _JournalPageState extends State<JournalPage> {
       entry.isDeleted = true;
       entry.deletedAt = DateTime.now();
     });
+    ApiService.deleteJournal(entry.id);
     _showSnackbar('Jurnal dipindahkan ke kotak sampah');
   }
 
@@ -105,6 +135,7 @@ class _JournalPageState extends State<JournalPage> {
       entry.isDeleted = false;
       entry.deletedAt = null;
     });
+    ApiService.restoreJournal(entry.id);
     _showSnackbar('Jurnal berhasil dipulihkan');
   }
 
@@ -112,6 +143,7 @@ class _JournalPageState extends State<JournalPage> {
     setState(() {
       _journals.remove(entry);
     });
+    ApiService.permanentDeleteJournal(entry.id);
     _showSnackbar('Jurnal dihapus permanen', isError: true);
   }
 
@@ -180,17 +212,75 @@ class _JournalPageState extends State<JournalPage> {
                           ),
                         ),
                       ),
-                      // Maskot Curhatin (diperbesar)
-                      SizedBox(
-                        width: 72,
-                        height: 72,
-                        child: Image.asset(
-                          'assets/image/maskot.png',
-                          fit: BoxFit.contain,
-                          errorBuilder: (c, e, s) => const Icon(
-                            Icons.emoji_emotions_outlined,
-                            color: Color(0xFF2B6FDE),
-                            size: 36,
+                      // Maskot Curhatin dengan Menu Akun & Logout
+                      PopupMenuButton<String>(
+                        tooltip: 'Menu Akun',
+                        offset: const Offset(0, 50),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        onSelected: (val) {
+                          if (val == 'logout') {
+                            ApiService.logout();
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (_) => const LoginPage()),
+                              (route) => false,
+                            );
+                          }
+                        },
+                        itemBuilder: (ctx) => [
+                          PopupMenuItem(
+                            enabled: false,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  ApiService.currentUser?['name'] ?? 'Akun Pengguna',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                    color: Color(0xFF061854),
+                                  ),
+                                ),
+                                if (ApiService.currentUser?['phone'] != null)
+                                  Text(
+                                    ApiService.currentUser!['phone'],
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Color(0xFF8896AB),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          const PopupMenuDivider(),
+                          const PopupMenuItem(
+                            value: 'logout',
+                            child: Row(
+                              children: [
+                                Icon(Icons.logout_rounded, color: Color(0xFFE53935), size: 18),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Keluar Akun',
+                                  style: TextStyle(
+                                    color: Color(0xFFE53935),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                        child: SizedBox(
+                          width: 72,
+                          height: 72,
+                          child: Image.asset(
+                            'assets/image/maskot.png',
+                            fit: BoxFit.contain,
+                            errorBuilder: (c, e, s) => const Icon(
+                              Icons.emoji_emotions_outlined,
+                              color: Color(0xFF2B6FDE),
+                              size: 36,
+                            ),
                           ),
                         ),
                       ),
@@ -268,6 +358,7 @@ class _JournalPageState extends State<JournalPage> {
                     if (result is JournalEntry) {
                       setState(() => _journals.insert(0, result));
                       _showSnackbar('Jurnal berhasil disimpan!');
+                      ApiService.createJournal(title: result.title, content: result.content);
                     }
                   },
                   borderRadius: BorderRadius.circular(29),
@@ -408,6 +499,11 @@ class _JournalPageState extends State<JournalPage> {
                   final index = _journals.indexWhere((j) => j.id == result.id);
                   if (index != -1) _journals[index] = result;
                 });
+                ApiService.updateJournal(
+                  id: result.id,
+                  title: result.title,
+                  content: result.content,
+                );
               }
             },
             child: const Text(
