@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'assessment_question_page.dart';
 
 /// Halaman persiapan asesmen Curhatin (frame desain "LP AM2").
 ///
@@ -41,8 +42,7 @@ class AssessmentPreparePage extends StatelessWidget {
   static const double _buttonHeight = 36;
 
   // ---- Warna ----
-  static const Color _bgTop = Color(0xFF2B31A0);
-  static const Color _bgBottom = Color(0xFF1A1F78);
+  static const Color _bg = Color(0xFFD9EAFD);
   static const Color _iconBlue = Color(0xFF2A7BFF);
   static const Color _textDark = Color(0xFF111111);
   static const Color _textGrey = Color(0xFF3C3C3C);
@@ -50,54 +50,47 @@ class AssessmentPreparePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _bgBottom,
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [_bgTop, _bgBottom],
+      backgroundColor: _bg,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background senada dashboard, login, dan register
+          Positioned.fill(
+            child: Image.asset(
+              'assets/image/bg_bubble.jpg',
+              fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => const DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xFFCFE3FD), Color(0xFFEAF3FF)],
+                  ),
+                ),
+              ),
+            ),
           ),
-        ),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final padding = MediaQuery.of(context).padding;
-            final availW = constraints.maxWidth;
-            final availH = constraints.maxHeight - padding.top - padding.bottom;
-            final s = math.min(availW / _frameW, availH / _frameH);
-            final bs = constraints.maxWidth / _frameW;
 
-            return Stack(
-              fit: StackFit.expand,
-              children: [
-                // Background blob
-                Positioned.fill(
-                  child: Image.asset(
-                    'assets/images/assessment_bg.png',
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                    errorBuilder: (_, _, _) => _PaintedBlobs(scale: bs),
+          // Konten
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final padding = MediaQuery.of(context).padding;
+              final availW = constraints.maxWidth;
+              final availH = constraints.maxHeight - padding.top - padding.bottom;
+              final s = math.min(availW / _frameW, availH / _frameH);
+
+              return SafeArea(
+                child: Center(
+                  child: SizedBox(
+                    width: _frameW * s,
+                    height: _frameH * s,
+                    child: _buildContent(context, s),
                   ),
                 ),
-
-                // Konten
-                Positioned.fill(
-                  child: SafeArea(
-                    child: Center(
-                      child: SizedBox(
-                        width: _frameW * s,
-                        height: _frameH * s,
-                        child: _buildContent(context, s),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -115,13 +108,13 @@ class AssessmentPreparePage extends StatelessWidget {
             child: SizedBox(
               width: _logoWidth * s,
               child: Image.asset(
-                'assets/images/logo_curhatin_putih.png',
+                'assets/images/curhatinlogo2.png',
                 fit: BoxFit.contain,
                 errorBuilder: (_, _, _) => Text(
                   'Curhatin',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
-                    color: Colors.white,
+                    color: const Color(0xFF1B6FD8),
                     fontSize: 30 * s,
                     fontWeight: FontWeight.w700,
                   ),
@@ -331,15 +324,19 @@ class AssessmentPreparePage extends StatelessWidget {
             label: 'Mulai',
             icon: Icons.arrow_forward_rounded,
             iconFirst: false,
-            onPressed: _onStart,
+            onPressed: () => _onStart(context),
           ),
         ),
       ],
     );
   }
 
-  static void _onStart() {
-    // TODO: navigasi ke halaman pertanyaan asesmen.
+  static void _onStart(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const AssessmentQuestionPage(),
+      ),
+    );
   }
 
   // ------------------------------------------------------------------
@@ -525,125 +522,6 @@ class _GradientButton extends StatelessWidget {
             children: iconFirst
                 ? [iconWidget, SizedBox(width: 7 * s), textWidget]
                 : [textWidget, SizedBox(width: 7 * s), iconWidget],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ======================================================================
-// Fallback: blob digambar lewat kode (dipakai bila assessment_bg.png tidak ada)
-// Koordinat dalam px frame desain; menempel di sudut layar asli.
-// ======================================================================
-class _PaintedBlobs extends StatelessWidget {
-  final double scale;
-
-  const _PaintedBlobs({required this.scale});
-
-  @override
-  Widget build(BuildContext context) {
-    final s = scale;
-    return Stack(
-      clipBehavior: Clip.hardEdge,
-      children: [
-        // ---------- Kiri atas ----------
-        _tl(s, cx: 42, cy: 8, w: 140, h: 72, angle: 0.35),
-        _tl(s, cx: 30, cy: 34, w: 76, h: 40, angle: 0.65, opacity: 0.95),
-        _tl(s, cx: 8, cy: 66, w: 84, h: 30, angle: 1.1),
-
-        // ---------- Kiri bawah ----------
-        _bl(s, cx: 14, cy: 112, w: 104, h: 40, angle: 1.05),
-        _bl(s, cx: 20, cy: 58, w: 120, h: 62, angle: 0.55, opacity: 0.95),
-        _bl(s, cx: 110, cy: 20, w: 270, h: 118, angle: -0.14),
-
-        // ---------- Kanan bawah ----------
-        _br(s, cx: 22, cy: 104, w: 104, h: 48, angle: -0.95),
-        _br(s, cx: 14, cy: 58, w: 124, h: 58, angle: -0.5, opacity: 0.95),
-        _br(s, cx: 86, cy: 18, w: 260, h: 112, angle: 0.18),
-      ],
-    );
-  }
-
-  Widget _tl(double s,
-      {required double cx,
-      required double cy,
-      required double w,
-      required double h,
-      required double angle,
-      double opacity = 1}) {
-    return Positioned(
-      left: (cx - w / 2) * s,
-      top: (cy - h / 2) * s,
-      child: _Blob(width: w * s, height: h * s, angle: angle, opacity: opacity),
-    );
-  }
-
-  Widget _bl(double s,
-      {required double cx,
-      required double cy,
-      required double w,
-      required double h,
-      required double angle,
-      double opacity = 1}) {
-    return Positioned(
-      left: (cx - w / 2) * s,
-      bottom: (cy - h / 2) * s,
-      child: _Blob(width: w * s, height: h * s, angle: angle, opacity: opacity),
-    );
-  }
-
-  Widget _br(double s,
-      {required double cx,
-      required double cy,
-      required double w,
-      required double h,
-      required double angle,
-      double opacity = 1}) {
-    return Positioned(
-      right: (cx - w / 2) * s,
-      bottom: (cy - h / 2) * s,
-      child: _Blob(width: w * s, height: h * s, angle: angle, opacity: opacity),
-    );
-  }
-}
-
-class _Blob extends StatelessWidget {
-  final double width;
-  final double height;
-  final double angle;
-  final double opacity;
-
-  const _Blob({
-    required this.width,
-    required this.height,
-    this.angle = 0,
-    this.opacity = 1,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Opacity(
-      opacity: opacity,
-      child: Transform.rotate(
-        angle: angle,
-        child: Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
-              Radius.elliptical(width / 2, height / 2),
-            ),
-            gradient: const RadialGradient(
-              center: Alignment(-0.55, -0.65),
-              radius: 1.05,
-              colors: [
-                Color(0xFFC4E6FF),
-                Color(0xFF47A0FF),
-                Color(0xFF1D52E0),
-              ],
-              stops: [0.0, 0.42, 1.0],
-            ),
           ),
         ),
       ),

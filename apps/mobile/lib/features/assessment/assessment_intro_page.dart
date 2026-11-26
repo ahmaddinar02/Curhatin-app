@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../screens/dashboard.dart';
 import 'assessment_prepare_page.dart';
 
 /// Halaman pembuka asesmen Curhatin (frame desain "LP AM1").
@@ -47,60 +48,56 @@ class AssessmentIntroPage extends StatelessWidget {
   static const double _buttonRight = 19;
 
   // ---- Warna ----
-  static const Color _bgTop = Color(0xFF2B31A0);
-  static const Color _bgBottom = Color(0xFF1A1F78);
-  static const Color _lightBlue = Color(0xFF7DB8FF);
-  static const Color _blobLight = Color(0xFF4DB3FF);
-  static const Color _blobDark = Color(0xFF1E5CE0);
+  static const Color _bg = Color(0xFFD9EAFD);
+  static const Color _textNavy = Color(0xFF061854);
+  static const Color _textGrey = Color(0xFF475569);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _bgBottom,
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [_bgTop, _bgBottom],
-          ),
-        ),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final padding = MediaQuery.of(context).padding;
-
-            // Skala konten: muat di area aman (di luar status bar / notch).
-            final availW = constraints.maxWidth;
-            final availH = constraints.maxHeight - padding.top - padding.bottom;
-            final s = math.min(availW / _frameW, availH / _frameH);
-
-            // Skala blob: mengikuti lebar layar agar bentuknya sama dengan UI.
-            final bs = constraints.maxWidth / _frameW;
-
-            return Stack(
-              fit: StackFit.expand,
-              children: [
-                // Dekorasi blob menempel di sudut layar asli
-                ..._buildBlobs(bs),
-
-                // Konten utama
-                Positioned.fill(
-                  child: SafeArea(
-                    child: Center(
-                      child: SizedBox(
-                        width: _frameW * s,
-                        height: _frameH * s,
-                        child: _buildContent(context, s),
-                      ),
-                    ),
+      backgroundColor: _bg,
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background senada dashboard, login, dan register
+          Positioned.fill(
+            child: Image.asset(
+              'assets/image/bg_bubble.jpg',
+              fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => const DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xFFCFE3FD), Color(0xFFEAF3FF)],
                   ),
                 ),
-              ],
-            );
-          },
-        ),
+              ),
+            ),
+          ),
+
+          // Konten utama
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final padding = MediaQuery.of(context).padding;
+
+              // Skala konten: muat di area aman (di luar status bar / notch).
+              final availW = constraints.maxWidth;
+              final availH = constraints.maxHeight - padding.top - padding.bottom;
+              final s = math.min(availW / _frameW, availH / _frameH);
+
+              return SafeArea(
+                child: Center(
+                  child: SizedBox(
+                    width: _frameW * s,
+                    height: _frameH * s,
+                    child: _buildContent(context, s),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -109,6 +106,35 @@ class AssessmentIntroPage extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
+        // ===== Tombol Kembali ke Beranda (Atas Kiri) =====
+        Positioned(
+          top: (_logoTop - 2) * s,
+          left: 4 * s,
+          child: GestureDetector(
+            onTap: () => _popToHome(context),
+            child: Container(
+              width: 34 * s,
+              height: 34 * s,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF4A90D9).withValues(alpha: 0.16),
+                    blurRadius: 8 * s,
+                    offset: Offset(0, 2 * s),
+                  ),
+                ],
+              ),
+              child: Icon(
+                Icons.arrow_back_rounded,
+                color: const Color(0xFF2B6FDE),
+                size: 18 * s,
+              ),
+            ),
+          ),
+        ),
+
         // ===== Logo =====
         Positioned(
           top: _logoTop * s,
@@ -118,13 +144,13 @@ class AssessmentIntroPage extends StatelessWidget {
             child: SizedBox(
               width: _logoWidth * s,
               child: Image.asset(
-                'assets/images/logo_curhatin_putih.png',
+                'assets/images/curhatinlogo2.png',
                 fit: BoxFit.contain,
                 errorBuilder: (_, _, _) => Text(
                   'Curhatin',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
-                    color: Colors.white,
+                    color: const Color(0xFF1B6FD8),
                     fontSize: 28 * s,
                     fontWeight: FontWeight.w700,
                   ),
@@ -152,7 +178,7 @@ Positioned(
         errorBuilder: (_, _, _) => Icon(
           Icons.person,
           size: 120 * s,
-          color: Colors.white54,
+          color: const Color(0xFF2B6FDE),
         ),
       ),
     ),
@@ -168,9 +194,9 @@ Positioned(
             'Ambil jeda sejenak.\nCeritakan kabarmu hari ini.',
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(
-              color: Colors.white,
+              color: _textNavy,
               fontSize: _titleSize * s,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w700,
               height: _titleLineHeight,
             ),
           ),
@@ -187,7 +213,7 @@ Positioned(
             'kondisi perasaan dan kebutuhan batinmu saat ini.',
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(
-              color: _lightBlue,
+              color: _textGrey,
               fontSize: _bodySize * s,
               fontWeight: FontWeight.w500,
               height: _bodyLineHeight,
@@ -195,7 +221,7 @@ Positioned(
           ),
         ),
 
-        // ===== Tombol =====
+        // ===== Tombol Selanjutnya =====
         Positioned(
           top: _buttonTop * s,
           right: _buttonRight * s,
@@ -203,6 +229,18 @@ Positioned(
         ),
       ],
     );
+  }
+
+  /// Kembali ke halaman Beranda / Dashboard.
+  static void _popToHome(BuildContext context) {
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const DashboardPage()),
+      );
+    }
   }
 
   /// Pindah ke halaman persiapan asesmen dengan transisi geser + fade.
@@ -229,57 +267,6 @@ Positioned(
         },
       ),
     );
-  }
-
-  /// Dekorasi oval biru di pojok atas kiri, bawah kiri, dan bawah kanan layar.
-  List<Widget> _buildBlobs(double s) {
-    return [
-      // Kiri atas
-      Positioned(
-        top: -34 * s,
-        left: -50 * s,
-        child: _Blob(width: 125 * s, height: 88 * s, angle: -0.35),
-      ),
-      Positioned(
-        top: 18 * s,
-        left: -26 * s,
-        child: _Blob(width: 70 * s, height: 50 * s, angle: 0.5, opacity: 0.85),
-      ),
-      Positioned(
-        top: 40 * s,
-        left: -18 * s,
-        child: _Blob(width: 46 * s, height: 56 * s, angle: 0.2, opacity: 0.9),
-      ),
-
-      // Kiri bawah
-      Positioned(
-        bottom: -44 * s,
-        left: -70 * s,
-        child: _Blob(width: 210 * s, height: 160 * s, angle: -0.35),
-      ),
-      Positioned(
-        bottom: -14 * s,
-        left: -56 * s,
-        child: _Blob(width: 120 * s, height: 70 * s, angle: 0.35, opacity: 0.8),
-      ),
-
-      // Kanan bawah
-      Positioned(
-        bottom: -62 * s,
-        right: -66 * s,
-        child: _Blob(width: 195 * s, height: 135 * s, angle: 0.3),
-      ),
-      Positioned(
-        bottom: 24 * s,
-        right: -44 * s,
-        child: _Blob(width: 100 * s, height: 62 * s, angle: -0.4, opacity: 0.85),
-      ),
-      Positioned(
-        bottom: -4 * s,
-        right: -26 * s,
-        child: _Blob(width: 86 * s, height: 70 * s, angle: 0.2, opacity: 0.7),
-      ),
-    ];
   }
 }
 
@@ -330,45 +317,6 @@ class _NextButton extends StatelessWidget {
                   color: Colors.white,
                   size: 11 * s,
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _Blob extends StatelessWidget {
-  final double width;
-  final double height;
-  final double angle;
-  final double opacity;
-
-  const _Blob({
-    required this.width,
-    required this.height,
-    this.angle = 0,
-    this.opacity = 1,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Opacity(
-      opacity: opacity,
-      child: Transform.rotate(
-        angle: angle,
-        child: Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.elliptical(width, height)),
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AssessmentIntroPage._blobLight,
-                AssessmentIntroPage._blobDark,
               ],
             ),
           ),
