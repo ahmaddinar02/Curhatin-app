@@ -12,21 +12,7 @@ class CreateDiscussionPage extends StatefulWidget {
 
 class _CreateDiscussionPageState extends State<CreateDiscussionPage> {
   final TextEditingController _contentController = TextEditingController();
-  String _selectedCategory = 'Curhat';
   bool _isPublishing = false;
-
-  final List<String> _categories = [
-    'Curhat',
-    'Kecemasan',
-    'Depresi',
-    'Burnout',
-    'Overthinking',
-    'Self-Care',
-    'Motivasi',
-    'Konseling',
-    'Kesepian',
-    'Lainnya',
-  ];
 
   bool get _isValid => _contentController.text.trim().isNotEmpty;
 
@@ -55,7 +41,7 @@ class _CreateDiscussionPageState extends State<CreateDiscussionPage> {
       userName: 'Aku',
       userAvatar: 'https://i.pravatar.cc/150?img=1',
       content: _contentController.text.trim(),
-      category: _selectedCategory,
+      category: 'Curhat',
       createdAt: DateTime.now(),
       likeCount: 0,
       commentCount: 0,
@@ -88,17 +74,7 @@ class _CreateDiscussionPageState extends State<CreateDiscussionPage> {
                 // Content input
                 _buildContentInput(),
 
-                const SizedBox(height: 20),
-
-                // Category selector
-                _buildCategorySelector(),
-
-                const SizedBox(height: 20),
-
-                // Attachments row
-                _buildAttachmentsRow(),
-
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
 
                 // Publish button
                 _buildPublishButton(),
@@ -151,9 +127,10 @@ class _CreateDiscussionPageState extends State<CreateDiscussionPage> {
         'Diskusi Baru',
         style: TextStyle(
           fontFamily: 'Poppins',
+          fontWeight: FontWeight.bold,
           fontSize: 20,
-          color: Color(0xFF2b7afc),
-        )
+          color: Color(0xFF2B7AFC),
+        ),
       ),
       centerTitle: true,
       bottom: PreferredSize(
@@ -253,90 +230,6 @@ class _CreateDiscussionPageState extends State<CreateDiscussionPage> {
     );
   }
 
-  Widget _buildCategorySelector() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Kategori',
-          style: AppTextStyles.heading3,
-        ),
-        const SizedBox(height: 10),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: _categories.map((cat) {
-            final isSelected = _selectedCategory == cat;
-            return GestureDetector(
-              onTap: () => setState(() => _selectedCategory = cat),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                decoration: BoxDecoration(
-                  color: isSelected ? AppColors.primary : AppColors.surfaceGrey,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: isSelected ? AppColors.primary : AppColors.divider,
-                    width: 1.5,
-                  ),
-                ),
-                child: Text(
-                  cat,
-                  style: AppTextStyles.labelMedium.copyWith(
-                    color: isSelected ? Colors.white : AppColors.textSecondary,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAttachmentsRow() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Tambahkan Media',
-          style: AppTextStyles.heading3,
-        ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            _AttachmentButton(
-              icon: Icons.image_outlined,
-              label: 'Galeri',
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Fitur galeri akan tersedia segera'),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-              },
-            ),
-            const SizedBox(width: 10),
-            _AttachmentButton(
-              icon: Icons.camera_alt_outlined,
-              label: 'Kamera',
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Fitur kamera akan tersedia segera'),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
   Widget _buildPublishButton() {
     return SizedBox(
       width: double.infinity,
@@ -372,46 +265,6 @@ class _CreateDiscussionPageState extends State<CreateDiscussionPage> {
                     letterSpacing: 0.3,
                   ),
                 ),
-        ),
-      ),
-    );
-  }
-}
-
-class _AttachmentButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  const _AttachmentButton({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          color: AppColors.surfaceGrey,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.divider),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 20, color: AppColors.primary),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: AppTextStyles.labelMedium.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ],
         ),
       ),
     );
