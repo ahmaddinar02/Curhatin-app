@@ -3,33 +3,33 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\JournalController;
 
 /*
 |--------------------------------------------------------------------------
 | API Routes - Curhatin App
 |--------------------------------------------------------------------------
-|
-| Public Routes (tidak perlu token):
-|   POST /api/register  -> Daftar akun baru
-|   POST /api/login     -> Login dengan nomor telepon + password
-|
-| Protected Routes (butuh Bearer Token dari Sanctum):
-|   POST /api/logout    -> Logout & cabut token
-|   GET  /api/profile   -> Ambil data profil user
-|   GET  /api/user      -> Alias untuk profil (default Laravel Sanctum)
-|
 */
 
-// === RUTE PUBLIK (Auth) ===
+// === AUTHENTICATION ROUTES ===
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-// === RUTE TERPROTEKSI (Membutuhkan Token Sanctum) ===
+// === JOURNAL ROUTES (Dapat diakses publik atau dengan token) ===
+Route::get('/journals', [JournalController::class, 'index']);
+Route::get('/journals/trash', [JournalController::class, 'trash']);
+Route::post('/journals', [JournalController::class, 'store']);
+Route::get('/journals/{id}', [JournalController::class, 'show']);
+Route::put('/journals/{id}', [JournalController::class, 'update']);
+Route::delete('/journals/{id}', [JournalController::class, 'destroy']);
+Route::post('/journals/{id}/restore', [JournalController::class, 'restore']);
+Route::delete('/journals/{id}/permanent', [JournalController::class, 'forceDelete']);
+
+// === PROTECTED ROUTES (Sanctum) ===
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/profile', [AuthController::class, 'profile']);
 
-    // Rute default Laravel Sanctum
     Route::get('/user', function (Request $request) {
         return $request->user();
     });

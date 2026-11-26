@@ -14,33 +14,86 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
+     * Nama tabel di database sesuai skema curhatin.sql
+     */
+    protected $table = 'users';
+
+    /**
+     * Primary key tabel users
+     */
+    protected $primaryKey = 'id_user';
+
+    /**
      * The attributes that are mass assignable.
      */
     protected $fillable = [
-        'name',
-        'phone',
+        'nama',
         'email',
-        'password',
+        'no_telepon',
+        'password_hash',
+        'google_uid',
+        'foto_profil',
+        'role',
+        'status',
+        'streak',
     ];
 
     /**
      * The attributes that should be hidden for serialization.
      */
     protected $hidden = [
-        'password',
+        'password_hash',
         'remember_token',
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Beritahu Laravel auth untuk menggunakan kolom password_hash
+     */
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
+
+    /**
+     * Accessor untuk nama agar kompatibel dengan pemanggilan $user->name
+     */
+    public function getNameAttribute(): ?string
+    {
+        return $this->nama;
+    }
+
+    /**
+     * Mutator untuk nama
+     */
+    public function setNameAttribute($value): void
+    {
+        $this->attributes['nama'] = $value;
+    }
+
+    /**
+     * Accessor untuk no_telepon agar kompatibel dengan pemanggilan $user->phone
+     */
+    public function getPhoneAttribute(): ?string
+    {
+        return $this->no_telepon;
+    }
+
+    /**
+     * Mutator untuk no_telepon
+     */
+    public function setPhoneAttribute($value): void
+    {
+        $this->attributes['no_telepon'] = $value;
+    }
+
+    /**
+     * Cast attributes.
      */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'no_telepon_verified_at' => 'datetime',
         ];
     }
 }
