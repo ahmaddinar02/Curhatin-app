@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'journal_write_screens.dart';
-import 'login_page_screens.dart';
-import '../services/api_service.dart';
+import '../../auth/login_page_screens.dart';
+import '../../services/api_service.dart';
 
 // ── MODEL DATA JURNAL ────────────────────────────────────────────
 class JournalEntry {

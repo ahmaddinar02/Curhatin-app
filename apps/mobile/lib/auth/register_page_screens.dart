@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main_navigation_screen.dart';
+import '../screens/dashboard.dart';
 import '../services/api_service.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -64,7 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
         if (mounted) {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (_) => const MainNavigationPage()),
+            MaterialPageRoute(builder: (_) => const DashboardPage()),
             (route) => false,
           );
         }

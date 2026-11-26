@@ -5,29 +5,25 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.8.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.6
   http: ^1.2.2
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true
 
   assets:
-    - assets/image/logo_hero.png
-    - assets/image/bordir_bawah.png
-    - assets/image/logo_hero1.png
-    - assets/image/bordir_bawah1.png
-    - assets/image/maskot.png
-    - assets/image/bg_bubble.jpg
+    - assets/image/
     - assets/images/
 
   fonts:

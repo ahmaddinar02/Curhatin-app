@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/landing_page_screens.dart';
-import 'features/forum/pages/forum_page.dart'; // Forum dari branch dinar
+import 'auth/landing_page_screens.dart';
 
 void main() {
   runApp(const CurhatinApp());
@@ -15,8 +14,11 @@ class CurhatinApp extends StatelessWidget {
       title: 'Curhatin',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        useMaterial3: false,
-        primarySwatch: Colors.blue,
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF2B7AFC),
+          brightness: Brightness.light,
+        ),
         fontFamily: 'Poppins',
         textTheme: ThemeData.light().textTheme.apply(
           fontFamily: 'Poppins',

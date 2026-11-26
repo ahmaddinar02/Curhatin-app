@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:mobile/main.dart';
+import 'package:curhatin/main.dart';
 
 void main() {
   testWidgets('Curhatin app smoke test', (WidgetTester tester) async {

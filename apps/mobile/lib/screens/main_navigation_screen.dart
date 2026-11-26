@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'journal_page_screens.dart';
+import '../features/journal/journal_page_screens.dart';
 import '../features/forum/pages/forum_page.dart';
 
 class MainNavigationPage extends StatefulWidget {

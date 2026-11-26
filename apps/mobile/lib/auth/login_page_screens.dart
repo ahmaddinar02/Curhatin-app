@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'register_page_screens.dart';
 import 'forgot_password_screens.dart';
-import 'journal_page_screens.dart';
-import 'main_navigation_screen.dart';
+import '../screens/dashboard.dart';
 import '../services/api_service.dart';
 
 class LoginPage extends StatefulWidget {
@@ -47,9 +46,10 @@ class _LoginPageState extends State<LoginPage> {
 
     if (res['success'] == true) {
       _showSnackbar(res['message'] ?? 'Login berhasil!');
-      Navigator.pushReplacement(
+      Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => const MainNavigationPage()),
+        MaterialPageRoute(builder: (_) => const DashboardPage()),
+        (route) => false,
       );
     } else {
       _showSnackbar(res['message'] ?? 'Login gagal.', isError: true);
