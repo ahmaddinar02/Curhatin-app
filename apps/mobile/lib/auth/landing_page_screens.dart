@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'login_page_screens.dart';
+import '../screens/dashboard.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -182,7 +183,15 @@ class LandingPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 16),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const DashboardPage(),
+                                ),
+                                (route) => false,
+                              );
+                            },
                             child: const Text(
                               'Lanjutkan Tanpa Akun',
                               style: TextStyle(

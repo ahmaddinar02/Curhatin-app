@@ -8,7 +8,13 @@ import '../features/relaxation/pages/relaxation_page.dart';
 
 /// Halaman Dashboard (Beranda) yang tampil setelah login.
 class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key});
+  /// Ubah default menjadi `true` ketika desain Pojok Relaksasi sudah final.
+  final bool isRelaxationEnabled;
+
+  const DashboardPage({
+    super.key,
+    this.isRelaxationEnabled = false,
+  });
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
@@ -40,18 +46,29 @@ class _DashboardPageState extends State<DashboardPage> {
     Navigator.push(context, MaterialPageRoute(builder: (_) => page));
   }
 
-  void _showSoon(String feature) {
+  void _showSoon(String feature, {String? customMessage}) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text('$feature segera hadir'),
+          content: Text(customMessage ?? '$feature segera hadir'),
           backgroundColor: _blue,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           margin: const EdgeInsets.all(16),
         ),
       );
+  }
+
+  void _onRelaxationTap() {
+    if (widget.isRelaxationEnabled) {
+      _open(const RelaxationPage());
+      return;
+    }
+    _showSoon(
+      'Pojok Relaksasi',
+      customMessage: 'Fitur akan tersedia segera',
+    );
   }
 
   void _selectMood(int index) {
@@ -117,33 +134,35 @@ class _DashboardPageState extends State<DashboardPage> {
                     title: 'Pojok Relaksasi',
                     subtitle: 'Luangkan waktu sejenak untuk\nmenenangkan diri',
                     actionLabel: 'Lihat Semua',
-                    onTap: () => _open(const RelaxationPage()),
+                    onTap: _onRelaxationTap,
                   ),
                   const SizedBox(height: 12),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        child: _buildSmallCard(
-                          icon: Icons.menu_book_rounded,
-                          title: 'Jurnal Digital',
-                          subtitle: 'Tulis apa yang kamu rasakan hari ini.',
-                          actionLabel: 'Buka Jurnal',
-                          onTap: () => _open(const JournalPage()),
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          child: _buildSmallCard(
+                            icon: Icons.menu_book_rounded,
+                            title: 'Jurnal Digital',
+                            subtitle: 'Tulis apa yang kamu rasakan hari ini.',
+                            actionLabel: 'Buka Jurnal',
+                            onTap: () => _open(const JournalPage()),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _buildSmallCard(
-                          imageAsset: 'assets/images/chatbot_logo.png',
-                          icon: Icons.smart_toy_outlined,
-                          title: 'Ngobrol dengan Athena...',
-                          subtitle: 'Curhatin apa yang ada di pikiranmu.',
-                          actionLabel: 'Mulai Chat',
-                          onTap: () => _showSoon('Fitur chat Athena'),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildSmallCard(
+                            imageAsset: 'assets/images/chatbot_logo.png',
+                            icon: Icons.smart_toy_outlined,
+                            title: 'Ngobrol dengan Athena...',
+                            subtitle: 'Curhatin apa yang ada di pikiranmu.',
+                            actionLabel: 'Mulai Chat',
+                            onTap: () => _showSoon('Fitur chat Athena'),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 12),
                   _buildDiscussionCard(),
