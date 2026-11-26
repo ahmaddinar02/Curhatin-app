@@ -36,4 +36,37 @@ void main() {
       expect(find.byType(RelaxationPage), findsOneWidget);
     },
   );
+
+  testWidgets(
+    'Semua emote mood sejajar lurus dan warnanya sesuai',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: DashboardPage(),
+        ),
+      );
+
+      final moodIcons = <IconData>[
+        Icons.sentiment_very_dissatisfied_rounded,
+        Icons.sentiment_dissatisfied_rounded,
+        Icons.sentiment_neutral_rounded,
+        Icons.sentiment_satisfied_rounded,
+        Icons.sentiment_very_satisfied_rounded,
+      ];
+
+      final firstDy = tester.getCenter(find.byIcon(moodIcons.first)).dy;
+      for (final icon in moodIcons) {
+        expect(tester.getCenter(find.byIcon(icon)).dy, equals(firstDy));
+      }
+
+      // Pastikan item yang dipilih tetap sejajar lurus
+      await tester.tap(find.byIcon(Icons.sentiment_very_dissatisfied_rounded));
+      await tester.pumpAndSettle();
+
+      final selectedDy = tester.getCenter(find.byIcon(moodIcons.first)).dy;
+      for (final icon in moodIcons) {
+        expect(tester.getCenter(find.byIcon(icon)).dy, equals(selectedDy));
+      }
+    },
+  );
 }
