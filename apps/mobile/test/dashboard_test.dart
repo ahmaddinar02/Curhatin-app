@@ -1,3 +1,4 @@
+import 'package:curhatin/features/chatbot/pages/chatbot_page.dart';
 import 'package:curhatin/features/relaxation/pages/relaxation_page.dart';
 import 'package:curhatin/screens/dashboard.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +68,28 @@ void main() {
       for (final icon in moodIcons) {
         expect(tester.getCenter(find.byIcon(icon)).dy, equals(selectedDy));
       }
+    },
+  );
+
+  testWidgets(
+    'Klik Ngobrol dengan Athena membuka ChatbotPage',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: DashboardPage(),
+        ),
+      );
+
+      await tester.drag(
+        find.byType(SingleChildScrollView),
+        const Offset(0, -180),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Ngobrol dengan Athena...'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ChatbotPage), findsOneWidget);
     },
   );
 }
