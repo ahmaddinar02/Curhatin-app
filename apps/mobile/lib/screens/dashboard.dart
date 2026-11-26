@@ -31,15 +31,15 @@ class _DashboardPageState extends State<DashboardPage> {
 
   static const List<_Mood> _moods = [
     _Mood('Sangat\nBuruk', Icons.sentiment_very_dissatisfied_rounded,
-        Color(0xFFDCE6FB), Color(0xFF5C74C9)),
-    _Mood('Buruk', Icons.sentiment_dissatisfied_rounded, Color(0xFFD3E4FB),
-        Color(0xFF4A86D6)),
-    _Mood('Biasa\nSaja', Icons.sentiment_neutral_rounded, Color(0xFFFFEBC2),
-        Color(0xFFE9A21B)),
-    _Mood('Baik', Icons.sentiment_satisfied_rounded, Color(0xFFD6F2D9),
-        Color(0xFF3FA65A)),
+        Color(0xFFFFE0E0), Color(0xFFE53935)), // Merah
+    _Mood('Buruk', Icons.sentiment_dissatisfied_rounded, Color(0xFFFFE8D1),
+        Color(0xFFF57C00)), // Oranye
+    _Mood('Biasa\nSaja', Icons.sentiment_neutral_rounded, Color(0xFFF7ECD8),
+        Color(0xFFA9834F)), // Krem
+    _Mood('Baik', Icons.sentiment_satisfied_rounded, Color(0xFFDBF2FF),
+        Color(0xFF0EA5E9)), // Sky Blue
     _Mood('Sangat\nBaik', Icons.sentiment_very_satisfied_rounded,
-        Color(0xFFFFD9DF), Color(0xFFE5576F)),
+        Color(0xFFDCFF7A), Color(0xFF3E9E00)), // Hijau Stabilo
   ];
 
   void _open(Widget page) {
@@ -279,6 +279,7 @@ class _DashboardPageState extends State<DashboardPage> {
           ),
           const SizedBox(height: 10),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: List.generate(_moods.length, (i) {
               final mood = _moods[i];
               final selected = _selectedMood == i;
@@ -305,16 +306,22 @@ class _DashboardPageState extends State<DashboardPage> {
                                 color: mood.foreground, size: selected ? 30 : 26),
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          mood.label,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: selected ? _navy : _grey,
-                            fontSize: 9,
-                            height: 1.2,
-                            fontWeight:
-                                selected ? FontWeight.w700 : FontWeight.w500,
+                        const SizedBox(height: 6),
+                        SizedBox(
+                          height: 24,
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Text(
+                              mood.label,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: selected ? _navy : _grey,
+                                fontSize: 9,
+                                height: 1.2,
+                                fontWeight:
+                                    selected ? FontWeight.w700 : FontWeight.w500,
+                              ),
+                            ),
                           ),
                         ),
                       ],
